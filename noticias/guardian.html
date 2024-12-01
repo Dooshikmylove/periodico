@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noticias - The Guardian API</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+    .news-container {
+      margin-top: 20px;
+    }
+    .news-title {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    .news-description {
+      margin-top: 10px;
+    }
+    .news-link {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center mt-4">Noticias - The Guardian API</h1>
+    <div class="news-container" id="newsContent"></div>
+  </div>
+  <script>
+    const endpoint = 'https://content.guardianapis.com/search?api-key=f93b2a87-57d0-44f2-859a-15c1941092ac&page-size=10';
+    fetch(endpoint)
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById("newsContent");
+        data.response.results.forEach(news => {
+          const newsHTML = `
+            <div class="news-title">${news.webTitle || "No Title"}</div>
+            <a href="${news.webUrl}" target="_blank" class="btn btn-primary news-link">Read More</a>
+          `;
+          container.innerHTML += newsHTML;
+        });
+      })
+      .catch(error => console.error("Error fetching news:", error));
+  </script>
+</body>
+</html>

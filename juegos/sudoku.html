@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sudoku</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #92c5fc;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      text-align: center;
+    }
+    #sudoku-board {
+      display: grid;
+      grid-template-columns: repeat(9, 40px);
+      grid-template-rows: repeat(9, 40px);
+      gap: 1px;
+      margin: 20px 0;
+      justify-content: center;
+    }
+    .cell {
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      line-height: 40px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+    }
+    .cell[data-fixed="true"] {
+      background-color: #64b7f6;
+    }
+    .cell input {
+      width: 100%;
+      height: 100%;
+      border: none;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    button {
+      margin: 10px;
+      width: 150px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="mb-4">SUDOKU</h1>
+    <div id="sudoku-board"></div>
+    <button id="check-solution" class="btn btn-outline-primary"><i class="fas fa-check"></i> ACEPTAR</button>
+    <a href="../juego.html"><button class="btn btn-outline-danger"><i class="fas fa-check"></i> SALIR</button></a>
+
+  </div>
+
+  <script>
+    const sudokuBoard = document.getElementById("sudoku-board");
+    const board = [
+      [5, 3, 0, 0, 7, 0, 0, 0, 0],
+      [6, 0, 0, 1, 9, 5, 0, 0, 0],
+      [0, 9, 8, 0, 0, 0, 0, 6, 0],
+      [8, 0, 0, 0, 6, 0, 0, 0, 3],
+      [4, 0, 0, 8, 0, 3, 0, 0, 1],
+      [7, 0, 0, 0, 2, 0, 0, 0, 6],
+      [0, 6, 0, 0, 0, 0, 2, 8, 0],
+      [0, 0, 0, 4, 1, 9, 0, 0, 5],
+      [0, 0, 0, 0, 8, 0, 0, 7, 9],
+    ];
+
+    function renderBoard() {
+      sudokuBoard.innerHTML = "";
+      board.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+          const cellElement = document.createElement("div");
+          cellElement.classList.add("cell");
+
+          if (cell !== 0) {
+            cellElement.textContent = cell;
+            cellElement.dataset.fixed = "true";
+          } else {
+            const input = document.createElement("input");
+            input.type = "number";
+            input.min = 1;
+            input.max = 9;
+            input.dataset.row = rowIndex;
+            input.dataset.col = colIndex;
+            cellElement.appendChild(input);
+          }
+
+          sudokuBoard.appendChild(cellElement);
+        });
+      });
+    }
+
+    function checkSolution() {
+      const inputs = document.querySelectorAll(".cell input");
+      let valid = true;
+
+      inputs.forEach((input) => {
+        const row = parseInt(input.dataset.row);
+        const col = parseInt(input.dataset.col);
+        const value = parseInt(input.value);
+
+        if (isNaN(value) || value < 1 || value > 9) {
+          valid = false;
+        } else {
+          board[row][col] = value;
+        }
+      });
+
+      if (valid && isBoardValid(board)) {
+        Swal.fire({
+          title: '¡FELICIDADES!',
+          text: 'TU SOLUCION ES CORRECTA',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+      } else {
+        Swal.fire({
+          title: '¡UPS!',
+          text: 'TU SOLUCION NO ES CORRECTA, REVISA DE NUEVO',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
+    }
+
+    function isBoardValid(board) {
+      for (let i = 0; i < 9; i++) {
+        if (!isValidGroup(board[i]) || !isValidGroup(board.map(row => row[i]))) {
+          return false;
+        }
+      }
+
+      for (let row = 0; row < 9; row += 3) {
+        for (let col = 0; col < 9; col += 3) {
+          const group = [];
+          for (let r = row; r < row + 3; r++) {
+            for (let c = col; c < col + 3; c++) {
+              group.push(board[r][c]);
+            }
+          }
+          if (!isValidGroup(group)) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    }
+
+    function isValidGroup(group) {
+      const numbers = group.filter(n => n !== 0);
+      return new Set(numbers).size === numbers.length;
+    }
+
+    // Initial board render
+    renderBoard();
+    document.getElementById("check-solution").addEventListener("click", checkSolution);
+  </script>
+</body>
+</html>

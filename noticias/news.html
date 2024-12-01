@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noticias - NewsAPI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+    .news-container {
+      margin-top: 20px;
+    }
+    .news-title {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    .news-description {
+      margin-top: 10px;
+    }
+    .news-link {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center mt-4">Noticias - NewsAPI</h1>
+    <div class="news-container" id="newsContent"></div>
+  </div>
+  <script>
+    const endpoint = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=YOUR_API_KEY';
+    fetch(endpoint)
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById("newsContent");
+        data.articles.forEach(news => {
+          const newsHTML = `
+            <div class="news-title">${news.title || "No Title"}</div>
+            <p class="news-description">${news.description || "No Description"}</p>
+            <a href="${news.url}" target="_blank" class="btn btn-primary news-link">Read More</a>
+          `;
+          container.innerHTML += newsHTML;
+        });
+      })
+      .catch(error => console.error("Error fetching news:", error));
+  </script>
+</body>
+</html>

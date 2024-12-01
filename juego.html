@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú de Juegos</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+    }
+
+    h1 {
+      color: #f8f9fa;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .game-card {
+      background-color: #1e1e1e;
+      border: 1px solid #333;
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-decoration: none;
+    }
+
+    .game-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px #aa6baa;
+    }
+
+    .card-title {
+      color: #f8f9fa;
+    }
+
+    .card-img-top {
+      border-bottom: 1px solid #333;
+    }
+  </style>
+</head>
+<body class="text-white">
+  <div class="container py-5">
+    <h1 class="text-center mb-4">Menú de Juegos</h1>
+    <div class="row gy-4">
+      <!-- Juego 1 -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="sopa_de_letras.html" class="text-decoration-none">
+          <div class="card game-card">
+            <img src="img/soup.png" class="card-img-top" alt="Juego 1" width="200px" height="400px">
+            <div class="card-body">
+              <h5 class="card-title text-center">Sopa de Letras</h5>
+            </div>
+          </div>
+        </a>
+      </div>
+      <!-- Juego 2 -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="juegos/sudoku.html" class="text-decoration-none">
+          <div class="card game-card">
+            <img src="img/zudoku.png" class="card-img-top" alt="Juego 2" width="200px" height="400px">
+            <div class="card-body">
+              <h5 class="card-title text-center">Sudoku</h5>
+            </div>
+          </div>
+        </a>
+      </div>
+      <!-- Juego 3 -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="juegos/snakegame.html" class="text-decoration-none">
+          <div class="card game-card">
+            <img src="img/snake.png" class="card-img-top" alt="Juego 3" width="200px" height="400px">
+            <div class="card-body">
+              <h5 class="card-title text-center">Snake Game</h5>
+            </div>
+          </div>
+        </a>
+      </div>
+      <!-- Juego 4 -->
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="juegos/sudoku.html" class="text-decoration-none">
+          <div class="card game-card">
+            <img src="img/zudoku.png" class="card-img-top" alt="Juego 4" width="200px" height="400px">
+            <div class="card-body">
+              <h5 class="card-title text-center">Sudoku</h5>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <center><a href="inicio.html"><button class="btn btn-danger w-50">Salir</button></a></center>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
