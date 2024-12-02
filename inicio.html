@@ -152,6 +152,7 @@
 <body>
     <div class="container">
         <h1 class="text-center">PERIÓDICO VIRTUAL</h1>
+        <button class="logout-btn btn btn-danger" id="logout-btn">Cerrar Sesion</button>
         <img src="img/arcade.png" alt="Máquina de juegos" class="arcade" onclick="navigate('juego.html')">
         <img src="img/clouds.png" alt="Nubes" class="clouds" onclick="navigate('clima.html')">
         <img src="img/foro.png" alt="foro" class="foro" onclick="navigate('foro.html')">
@@ -173,6 +174,13 @@
     </div>
 
     <script>
+        const logoutButton = document.getElementById('logout-btn');
+        logoutButton.addEventListener('click', () => {
+            // Aquí puedes implementar el cierre de sesión (Firebase o sistema propio)
+            sessionStorage.clear(); // Limpia datos de sesión en navegador
+            alert('Sesión cerrada exitosamente.');
+            window.location.href = 'index.html'; // Redirige a la página principal
+        });
         function navigate(page) {
             window.location.href = page;
         }
