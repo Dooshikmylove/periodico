@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sopa de Letras</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+    background-color: #000;
+    color: white;
+}
+
+.text-morado {
+    color: #b69cfb;
+}
+
+.btn-morado {
+    background-color: #6f42c1;
+    color: white;
+    border: none;
+}
+
+.btn-morado:hover {
+    background-color: #5a379a;
+    color: white;
+}
+
+#sopaContainer table {
+    border-spacing: 5px;
+    margin: auto;
+}
+
+#sopaContainer td {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+    background-color: #2d2d2d;
+    color: #b69cfb;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#sopaContainer td.highlight {
+    background-color: #6f42c1;
+    color: white;
+}
+
+</style></head>
+<body class=" text-white">
+    <div class="container py-5">
+        <h1 class="text-center text-morado">Sopa de Letras</h1>
+        <div class="mb-4">
+            <label for="newWordInput" class="form-label">Agregar palabra:</label>
+            <div class="input-group">
+                <input type="text" id="newWordInput" class="form-control" placeholder="Ejemplo: gato">
+                <button class="btn btn-morado" id="addWordButton">Agregar</button>
+            </div>
+        </div>
+        <ul id="wordsList" class="list-group mb-4">
+            <!-- Lista de palabras -->
+        </ul>
+        <div class="d-flex justify-content-center gap-3">
+            <button class="btn btn-morado" id="createButton">Crear Sopa</button>
+            <button class="btn btn-secondary" id="solveButton">Resolver</button>
+        </div>
+        <div id="sopaContainer" class="mt-4"></div>
+        <center><a href="../juego.html"><button class="btn btn-outline-danger w-25"><i class="fas fa-check"></i> SALIR</button></a></center>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const addWordButton = document.getElementById("addWordButton");
+const createButton = document.getElementById("createButton");
+const solveButton = document.getElementById("solveButton");
+const sopaContainer = document.getElementById("sopaContainer");
+const newWordInput = document.getElementById("newWordInput");
+const wordsList = document.getElementById("wordsList");
+
+let sopa = [];
+let words = [];
+let foundWords = [];
+let gridSize = 10;
+
+// Actualiza la lista de palabras en la UI
+function updateWordsList() {
+  wordsList.innerHTML = "";
+  words.forEach((word, index) => {
+    const li = document.createElement("li");
+    li.className = "list-group-item d-flex justify-content-between align-items-center bg-dark text-morado border-morado";
+    li.textContent = word;
+    const removeButton = document.createElement("button");
+    removeButton.className = "btn btn-danger btn-sm";
+    removeButton.textContent = "Quitar";
+    removeButton.addEventListener("click", () => {
+      words.splice(index, 1);
+      updateWordsList();
+    });
+    li.appendChild(removeButton);
+    wordsList.appendChild(li);
+  });
+}
+
+// Función para generar la sopa de letras
+function generateSopa() {
+  foundWords = [];
+  sopa = Array.from({ length: gridSize }, () => Array(gridSize).fill(""));
+
+  words.forEach((word) => placeWord(word));
+  fillEmptySpaces();
+  renderSopa();
+}
+
+// Coloca una palabra en la sopa
+function placeWord(word) {
+  let placed = false;
+
+  while (!placed) {
+    const direction = Math.random() > 0.5 ? "horizontal" : "vertical";
+    const row = Math.floor(Math.random() * gridSize);
+    const col = Math.floor(Math.random() * gridSize);
+
+    if (canPlaceWord(word, row, col, direction)) {
+      for (let i = 0; i < word.length; i++) {
+        if (direction === "horizontal") sopa[row][col + i] = word[i];
+        else sopa[row + i][col] = word[i];
+      }
+      placed = true;
+    }
+  }
+}
+
+// Verifica si se puede colocar la palabra
+function canPlaceWord(word, row, col, direction) {
+  if (direction === "horizontal" && col + word.length > gridSize) return false;
+  if (direction === "vertical" && row + word.length > gridSize) return false;
+
+  for (let i = 0; i < word.length; i++) {
+    const cell = direction === "horizontal" ? sopa[row][col + i] : sopa[row + i][col];
+    if (cell && cell !== word[i]) return false;
+  }
+  return true;
+}
+
+// Llena los espacios vacíos con letras aleatorias
+function fillEmptySpaces() {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  for (let i = 0; i < gridSize; i++) {
+    for (let j = 0; j < gridSize; j++) {
+      if (!sopa[i][j]) sopa[i][j] = letters[Math.floor(Math.random() * letters.length)];
+    }
+  }
+}
+
+// Renderiza la sopa de letras
+function renderSopa() {
+  sopaContainer.innerHTML = "";
+  const table = document.createElement("table");
+
+  sopa.forEach((row, i) => {
+    const tr = document.createElement("tr");
+    row.forEach((cell, j) => {
+      const td = document.createElement("td");
+      td.textContent = cell;
+      td.addEventListener("click", () => handleCellClick(td, i, j));
+      tr.appendChild(td);
+    });
+    table.appendChild(tr);
+  });
+
+  sopaContainer.appendChild(table);
+}
+
+// Maneja el clic en las celdas
+function handleCellClick(td, i, j) {
+  td.classList.toggle("highlight");
+  checkWords();
+}
+
+// Verifica si las palabras han sido encontradas
+function checkWords() {
+  const highlightedCells = Array.from(document.querySelectorAll(".highlight"));
+  const highlightedWord = highlightedCells.map((cell) => cell.textContent).join("");
+
+  words.forEach((word) => {
+    if (!foundWords.includes(word) && highlightedWord.includes(word)) {
+      foundWords.push(word);
+    }
+  });
+
+  if (foundWords.length === words.length) {
+    Swal.fire("¡Felicidades!", "Has encontrado todas las palabras. ¡Buen trabajo!", "success").then(() => {
+      words = []; // Vacía las palabras
+      updateWordsList(); // Actualiza la lista de palabras
+      sopaContainer.innerHTML = ''; // Limpia el tablero
+    });
+  }
+}
+
+// Marca las palabras no encontradas como resueltas
+function solveSopa() {
+  sopa.forEach((row, i) => {
+    row.forEach((cell, j) => {
+      const td = document.querySelector(`#sopaContainer table tr:nth-child(${i + 1}) td:nth-child(${j + 1})`);
+      words.forEach((word) => {
+        if (word.includes(cell)) td.classList.add("highlight");
+      });
+    });
+  });
+}
+
+// Event listeners
+addWordButton.addEventListener("click", () => {
+  const word = newWordInput.value.toUpperCase().trim();
+  if (word && !words.includes(word)) {
+    words.push(word);
+    updateWordsList();
+  }
+  newWordInput.value = "";
+});
+
+createButton.addEventListener("click", () => {
+  if (words.length === 0) {
+    Swal.fire("Error", "Por favor, agrega al menos una palabra.", "error");
+    return;
+  }
+  generateSopa();
+});
+
+solveButton.addEventListener("click", () => {
+  solveSopa();
+  Swal.fire("Ayuda", "Se han resaltado las palabras restantes.", "info");
+});
+
+    </script>
+</body>
+</html>

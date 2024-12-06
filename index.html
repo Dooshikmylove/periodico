@@ -170,6 +170,7 @@
                 })
                 .then((result) => {
                     const user = result.user; // Obtener usuario
+                    
                     alert(`Bienvenido, ${user.phoneNumber}`); // Mostrar número
                     window.location.href = `inicio.html?name=${user.phoneNumber}`; // Redirigir
                 })

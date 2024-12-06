@@ -38,6 +38,9 @@
       font-size: 1.5rem;
       color: #212529;
     }
+    .btn{
+        background-color: #aa6baa;
+    }
   </style>
 </head>
 <body>
@@ -50,12 +53,12 @@
       <canvas id="gc" class="game-canvas" width="400" height="400"></canvas>
     </div>
     <div class="keys">
-      <button class="btn btn-primary btn-lg" onclick="Snake.action('up')">⬆️</button>
+      <button class="btn btn-lg" onclick="Snake.action('up')">↑</button>
     </div>
     <div class="keys">
-      <button class="btn btn-primary btn-lg" onclick="Snake.action('left')">⬅️</button>
-      <button class="btn btn-primary btn-lg" onclick="Snake.action('down')">⬇️</button>
-      <button class="btn btn-primary btn-lg" onclick="Snake.action('right')">➡️</button>
+      <button class="btn btn-lg" onclick="Snake.action('left')">←</button>
+      <button class="btn btn-lg" onclick="Snake.action('down')">↓</button>
+      <button class="btn btn-lg" onclick="Snake.action('right')">→</button>
     </div>
     <br>
     <a href="../juego.html"><button class="btn btn-outline-danger w-25"><i class="fas fa-check"></i> SALIR</button></a>
